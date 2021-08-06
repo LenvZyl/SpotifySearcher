@@ -11,13 +11,25 @@ struct LoginView: View {
     @StateObject var loginViewModel: LoginViewModel
     
     var body: some View {
-        VStack{
-            Button(action: {
-                loginViewModel.connect()
-            }, label: {Text("Connect")})
-            Button(action: {
-                loginViewModel.getToken()
-            }, label: {Text("Print Token")})
+        ZStack{
+            
+                GeometryReader{ geometry in
+                    VStack{
+                        Spacer()
+                        Button(action: {loginViewModel.connect()}){
+                            Text("Spotify Login")
+                                .fontWeight(.bold)
+                                .padding(.horizontal, 60)
+                                .frame(height: 60)
+                                .background(Color.red)
+                                .clipShape(Capsule())
+                                .foregroundColor(.white)
+                        }.frame(width: geometry.size.width)
+                        Spacer()
+                    }.background(Color.white.ignoresSafeArea(.all, edges: .all))
+                    
+                }
+            
         }
     }
 }

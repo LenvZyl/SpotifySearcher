@@ -17,8 +17,11 @@ class LoginViewModel:NSObject, ObservableObject {
         clientID: spotifyClientID,
         redirectURL: spotifyRedirectURL
     )
+    var errorMessage = ""
+    var isConnected = false
     var accessToken: String? = nil
     var playURI = ""
+    
     
     
     private var connectCancellable: AnyCancellable?
@@ -32,13 +35,11 @@ class LoginViewModel:NSObject, ObservableObject {
             .sink { _ in
                 self.connect()
             }
-        
         disconnectCancellable = NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)
             .receive(on: DispatchQueue.main)
             .sink { _ in
                 self.disconnect()
             }
-
     }
             
     lazy var appRemote: SPTAppRemote = {
@@ -54,14 +55,14 @@ class LoginViewModel:NSObject, ObservableObject {
             appRemote.connectionParameters.accessToken = accessToken
             self.accessToken = accessToken
         } else if let errorDescription = parameters?[SPTAppRemoteErrorDescriptionKey] {
-            print(errorDescription)
+            errorMessage = errorDescription
         }
         
     }
     
     func connect() {
         guard let _ = self.appRemote.connectionParameters.accessToken else {
-            self.appRemote.authorizeAndPlayURI("")
+            self.appRemote.authorizeAndPlayURI(playURI)
             return
         }
         appRemote.connect()
@@ -90,7 +91,7 @@ extension LoginViewModel: SPTAppRemoteDelegate {
     }
     
     func appRemote(_ appRemote: SPTAppRemote, didFailConnectionAttemptWithError error: Error?) {
-        print("failed")
+        errorMessage = error?.localizedDescription ?? "Spotify Login failed"
     }
     
     func appRemote(_ appRemote: SPTAppRemote, didDisconnectWithError error: Error?) {
@@ -98,9 +99,7 @@ extension LoginViewModel: SPTAppRemoteDelegate {
     }
 }
 extension LoginViewModel: SPTAppRemotePlayerStateDelegate {
-    func playerStateDidChange(_ playerState: SPTAppRemotePlayerState) {
-        print(playerState)
-    }
+    func playerStateDidChange(_ playerState: SPTAppRemotePlayerState) {}
 }
 
     
