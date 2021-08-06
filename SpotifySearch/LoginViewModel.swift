@@ -19,6 +19,27 @@ class LoginViewModel:NSObject, ObservableObject {
     )
     var accessToken: String? = nil
     var playURI = ""
+    
+    
+    private var connectCancellable: AnyCancellable?
+    
+    private var disconnectCancellable: AnyCancellable?
+    
+    override init() {
+        super.init()
+        connectCancellable = NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)
+            .receive(on: DispatchQueue.main)
+            .sink { _ in
+                self.connect()
+            }
+        
+        disconnectCancellable = NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)
+            .receive(on: DispatchQueue.main)
+            .sink { _ in
+                self.disconnect()
+            }
+
+    }
             
     lazy var appRemote: SPTAppRemote = {
         let appRemote = SPTAppRemote(configuration: configuration, logLevel: .debug)
@@ -29,7 +50,6 @@ class LoginViewModel:NSObject, ObservableObject {
     
     func setAccessToken(from url: URL) {
         let parameters = appRemote.authorizationParameters(from: url)
-        
         if let accessToken = parameters?[SPTAppRemoteAccessTokenKey] {
             appRemote.connectionParameters.accessToken = accessToken
             self.accessToken = accessToken
@@ -51,6 +71,10 @@ class LoginViewModel:NSObject, ObservableObject {
         if appRemote.isConnected {
             appRemote.disconnect()
         }
+    }
+    
+    func getToken(){
+        print(accessToken ?? "")
     }
 }
 
