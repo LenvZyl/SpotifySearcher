@@ -9,6 +9,9 @@ import SwiftUI
 import Combine
 
 class LoginViewModel:NSObject, ObservableObject {
+    @Published var errorMessage = ""
+    @Published var accessToken: String? = nil
+    var playURI = ""
     
     let spotifyClientID = Constants.clientId
     let spotifyRedirectURL = Constants.redirectUrl
@@ -17,24 +20,13 @@ class LoginViewModel:NSObject, ObservableObject {
         clientID: spotifyClientID,
         redirectURL: spotifyRedirectURL
     )
-    var errorMessage = ""
-    var isConnected = false
-    var accessToken: String? = nil
-    var playURI = ""
-    
-    
-    
+   
     private var connectCancellable: AnyCancellable?
     
     private var disconnectCancellable: AnyCancellable?
     
     override init() {
         super.init()
-        connectCancellable = NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification)
-            .receive(on: DispatchQueue.main)
-            .sink { _ in
-                self.connect()
-            }
         disconnectCancellable = NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)
             .receive(on: DispatchQueue.main)
             .sink { _ in

@@ -8,11 +8,10 @@
 import SwiftUI
 
 struct LoginView: View {
-    @StateObject var loginViewModel: LoginViewModel
+    @StateObject var loginViewModel = LoginViewModel()
     
     var body: some View {
         ZStack{
-            
                 GeometryReader{ geometry in
                     VStack{
                         Spacer()
@@ -25,12 +24,21 @@ struct LoginView: View {
                                 .clipShape(Capsule())
                                 .foregroundColor(.white)
                         }.frame(width: geometry.size.width)
+                        Button(action: {loginViewModel.getToken()}){
+                            Text(loginViewModel.accessToken ?? "No")}
                         Spacer()
                     }.background(Color.white.ignoresSafeArea(.all, edges: .all))
-                    
+                    if(loginViewModel.accessToken != nil){
+                        
+                        SearchView(searchViewModel: SearchViewModel(accessToken: loginViewModel.accessToken!))
+                    }
                 }
             
+            
+        }.onOpenURL { url in
+            loginViewModel.setAccessToken(from: url)
         }
+       
     }
 }
 
