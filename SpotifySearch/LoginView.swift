@@ -24,10 +24,8 @@ struct LoginView: View {
                                 .clipShape(Capsule())
                                 .foregroundColor(.white)
                         }.frame(width: geometry.size.width)
-                        Button(action: {loginViewModel.getToken()}){
-                            Text(loginViewModel.accessToken ?? "No")}
                         Spacer()
-                    }.background(Color.white.ignoresSafeArea(.all, edges: .all))
+                    }.background(Color.black.ignoresSafeArea(.all, edges: .all))
                     if(loginViewModel.accessToken != nil){
                         
                         SearchView(searchViewModel: SearchViewModel(accessToken: loginViewModel.accessToken!))

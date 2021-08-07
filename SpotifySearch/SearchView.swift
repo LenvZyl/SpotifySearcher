@@ -6,16 +6,21 @@
 //
 
 import SwiftUI
+import Combine
+import Foundation
+import UIKit
+
 
 struct SearchView: View {
     @StateObject var searchViewModel: SearchViewModel
+    
     var body: some View {
         NavigationView {
             VStack{
-                SearchBar(text: $searchViewModel.searchText)
+                SearchBar(text: $searchViewModel.searchText, function: searchViewModel.search)
                     .padding(.top)
-                Button(action: {searchViewModel.search()}){
-                    Text("Search")}
+                    .padding(.bottom)
+            
                 if let artists = searchViewModel.searchResult?.artists {
                     ScrollView(.vertical) {
                         VStack(spacing: 10) {
@@ -43,14 +48,15 @@ struct SearchView_Previews: PreviewProvider {
 
 struct ArtistRowItem: View {
     var item: Item
-
+    
     var body: some View {
         VStack{
         HStack{
-            Text(item.name).frame(maxWidth: .infinity, alignment: .leading)
+            Text(item.name)
+                .frame(maxWidth: .infinity, alignment: .leading)
         }.frame(height: 60, alignment: .leading)
-        .background(Color.red)
-            Divider()
+        .padding(.horizontal)
+        Divider()
         }
         
     }

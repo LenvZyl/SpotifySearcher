@@ -13,7 +13,7 @@ class SearchViewModel:NSObject, ObservableObject {
     
     @Published var errorMessage = ""
     @Published var accessToken: String? = nil
-    @Published var searchText = "James Blunt"
+    @Published var searchText = ""
     @Published var searchResult: Artists? = nil
     var playURI = ""
     
@@ -78,6 +78,10 @@ struct Item: Decodable, Identifiable {
     let uri: String
     let id: String
     let genres: [String]
+    let images: [Image]
+}
+struct Image: Decodable {
+    let url: String
 }
 
 
