@@ -9,7 +9,7 @@ import SwiftUI
 
 struct RemoteImage: View {
 
-    @StateObject private var loader: Loader
+    @StateObject private var loader: ImageViewModel
     
     var body: some View {
         selectImage()
@@ -17,13 +17,10 @@ struct RemoteImage: View {
             .aspectRatio(contentMode: .fill)
             .frame(width: UIScreen.main.bounds.width, height: 250.0, alignment: .top)
             .clipped()
-            
     }
-
     init(url: String) {
-        _loader = StateObject(wrappedValue: Loader(url: url))
+        _loader = StateObject(wrappedValue: ImageViewModel(url: url))
     }
-
     private func selectImage() -> Image {
         switch loader.state {
         case .loading:

@@ -7,7 +7,7 @@
 import SwiftUI
 import Foundation
 
-class Loader: ObservableObject {
+class ImageViewModel: ObservableObject {
     var data = Data()
     var state = LoadState.loading
 

@@ -30,7 +30,7 @@
 		A2F67BE626BD851F00807530 /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F67BE526BD851F00807530 /* SearchBar.swift */; };
 		A2F67BE826BD85A400807530 /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F67BE726BD85A400807530 /* SearchViewModel.swift */; };
 		A2F67BEA26BF7A4400807530 /* ArtistView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F67BE926BF7A4400807530 /* ArtistView.swift */; };
-		A2F67BEF26BF7DDC00807530 /* ArtistViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F67BEE26BF7DDC00807530 /* ArtistViewModel.swift */; };
+		A2F67BEF26BF7DDC00807530 /* ImageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2F67BEE26BF7DDC00807530 /* ImageViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -81,7 +81,7 @@
 		A2F67BE526BD851F00807530 /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
 		A2F67BE726BD85A400807530 /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
 		A2F67BE926BF7A4400807530 /* ArtistView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistView.swift; sourceTree = "<group>"; };
-		A2F67BEE26BF7DDC00807530 /* ArtistViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArtistViewModel.swift; sourceTree = "<group>"; };
+		A2F67BEE26BF7DDC00807530 /* ImageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -207,7 +207,7 @@
 			children = (
 				A27E689E26BD6E470045AD1D /* LoginViewModel.swift */,
 				A2F67BE726BD85A400807530 /* SearchViewModel.swift */,
-				A2F67BEE26BF7DDC00807530 /* ArtistViewModel.swift */,
+				A2F67BEE26BF7DDC00807530 /* ImageViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -367,7 +367,7 @@
 				A237695426BF864B0080D412 /* RemoteImage.swift in Sources */,
 				A27E687126BD6DF50045AD1D /* SpotifySearchApp.swift in Sources */,
 				A296E36A26BFBED600ACAA07 /* Color+Extensions.swift in Sources */,
-				A2F67BEF26BF7DDC00807530 /* ArtistViewModel.swift in Sources */,
+				A2F67BEF26BF7DDC00807530 /* ImageViewModel.swift in Sources */,
 				A27E68A126BD6E5B0045AD1D /* LoginView.swift in Sources */,
 				A296E35A26BFA5EC00ACAA07 /* ArtistRowItem.swift in Sources */,
 				A2F67BE426BD844F00807530 /* SearchView.swift in Sources */,
