@@ -8,36 +8,40 @@
 import SwiftUI
 
 struct LoginView: View {
-    @StateObject var loginViewModel = LoginViewModel()
-    
+    @StateObject var loginViewModel = LoginViewModel()    
     var body: some View {
         ZStack{
-                GeometryReader{ geometry in
-                    VStack{
-                        Spacer()
-                        Button(action: {loginViewModel.connect()}){
-                            Text("Spotify Login")
-                                .fontWeight(.bold)
-                                .padding(.horizontal, 60)
-                                .frame(height: 60)
-                                .background(Color.red)
-                                .clipShape(Capsule())
-                                .foregroundColor(.white)
-                        }.frame(width: geometry.size.width)
-                        Spacer()
-                    }
-                    .background(LinearGradient(gradient: Constants.backgroundGradient, startPoint: .top, endPoint: .bottom)
-                                    .ignoresSafeArea(.all, edges: .all))
-                    if(loginViewModel.accessToken != nil){
-                        SearchView(searchViewModel: SearchViewModel(accessToken: loginViewModel.accessToken!))
-                    }
+            GeometryReader{ geometry in
+                VStack{
+                    Spacer()
+                    Button(action: {loginViewModel.connect()}){
+                        Text("Login with Spotify")
+                            .fontWeight(.bold)
+                            .padding(.horizontal, 80)
+                            .frame(height: 60)
+                            .background(Constants.spotifyGreen)
+                            .clipShape(Capsule())
+                            .foregroundColor(.white)
+                            .shadow(color: Color.white, radius: 3)
+                    }.frame(width: geometry.size.width)
+                    .padding(.vertical, 80)
                 }
-            
-            
+                .background(LinearGradient(gradient: Constants.backgroundGradient,
+                                           startPoint: .top,
+                                           endPoint: .bottom)
+                                .ignoresSafeArea(.all, edges: .all))
+                .alert(isPresented: ($loginViewModel.showError), content: {
+                    Alert(title: Text("Alert"),
+                          message: Text(loginViewModel.errorMessage),
+                          dismissButton: .destructive(Text("Ok")))
+                })
+                if(loginViewModel.accessToken != nil){
+                    SearchView(searchViewModel: SearchViewModel(accessToken: loginViewModel.accessToken!))
+                }
+            }
         }.onOpenURL { url in
             loginViewModel.setAccessToken(from: url)
         }
-       
     }
 }
 

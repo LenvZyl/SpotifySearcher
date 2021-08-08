@@ -14,4 +14,5 @@ struct Constants {
     static let redirectUrl = URL(string: "spotifysearch://spotify/callback")!
     static let scope = "user-read-email"
     static let backgroundGradient = Gradient(colors: [Color(hex: 0x1DB954), Color(hex: 0x191414)])
+    static let spotifyGreen = Color(hex: 0x1DB954)
 }

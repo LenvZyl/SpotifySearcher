@@ -16,15 +16,20 @@ class ImageViewModel: ObservableObject {
             self.state = .failure
             return
         }
-        URLSession.shared.dataTask(with: parsedURL) { data, response, error in
+        let config = URLSessionConfiguration.default
+        config.waitsForConnectivity = true
+        URLSession(configuration: config).dataTask(with: parsedURL) { [weak self] data, response, error in
+            guard let strongSelf = self else {
+                return
+            }
             if let data = data, data.count > 0 {
-                self.data = data
-                self.state = .success
+                strongSelf.data = data
+                strongSelf.state = .success
             } else {
-                self.state = .failure
+                strongSelf.state = .failure
             }
             DispatchQueue.main.async {
-                self.objectWillChange.send()
+                strongSelf.objectWillChange.send()
             }
         }.resume()
     }

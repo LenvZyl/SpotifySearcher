@@ -36,6 +36,11 @@ struct SearchView: View {
             }.navigationBarTitle("Spotify Search")
             .background(LinearGradient(gradient: Constants.backgroundGradient, startPoint: .top, endPoint: .bottom)
                             .ignoresSafeArea(.all, edges: .all))
+            .alert(isPresented: ($searchViewModel.showError), content: {
+                Alert(title: Text("Alert"),
+                      message: Text(searchViewModel.errorMessage),
+                      dismissButton: .destructive(Text("Ok")))
+            })
         }.accentColor(.white)
     }
 }

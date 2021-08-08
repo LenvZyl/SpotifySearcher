@@ -7,12 +7,15 @@
 
 import SwiftUI
 import Combine
+import Network
 
 class LoginViewModel:NSObject, ObservableObject {
-    @Published var errorMessage = ""
+    @Published var errorMessage: String = ""
+    @Published var showError: Bool = false
     @Published var accessToken: String? = nil
     var playURI = ""
     
+    let monitor = NWPathMonitor()
     let spotifyClientID = Constants.clientId
     let spotifyRedirectURL = Constants.redirectUrl
     
@@ -20,18 +23,11 @@ class LoginViewModel:NSObject, ObservableObject {
         clientID: spotifyClientID,
         redirectURL: spotifyRedirectURL
     )
-   
-    private var connectCancellable: AnyCancellable?
-    
+       
     private var disconnectCancellable: AnyCancellable?
     
     override init() {
         super.init()
-        disconnectCancellable = NotificationCenter.default.publisher(for: UIApplication.willResignActiveNotification)
-            .receive(on: DispatchQueue.main)
-            .sink { _ in
-                self.disconnect()
-            }
     }
             
     lazy var appRemote: SPTAppRemote = {
@@ -48,8 +44,8 @@ class LoginViewModel:NSObject, ObservableObject {
             self.accessToken = accessToken
         } else if let errorDescription = parameters?[SPTAppRemoteErrorDescriptionKey] {
             errorMessage = errorDescription
+            showError = true
         }
-        
     }
     
     func connect() {
@@ -64,10 +60,6 @@ class LoginViewModel:NSObject, ObservableObject {
         if appRemote.isConnected {
             appRemote.disconnect()
         }
-    }
-    
-    func getToken(){
-        print(accessToken ?? "")
     }
 }
 
@@ -84,6 +76,7 @@ extension LoginViewModel: SPTAppRemoteDelegate {
     
     func appRemote(_ appRemote: SPTAppRemote, didFailConnectionAttemptWithError error: Error?) {
         errorMessage = error?.localizedDescription ?? "Spotify Login failed"
+        showError = true
     }
     
     func appRemote(_ appRemote: SPTAppRemote, didDisconnectWithError error: Error?) {

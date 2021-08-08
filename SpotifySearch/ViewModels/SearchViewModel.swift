@@ -12,6 +12,7 @@ import Combine
 class SearchViewModel:NSObject, ObservableObject {
     
     @Published var errorMessage = ""
+    @Published var showError: Bool = false
     @Published var accessToken: String? = nil
     @Published var searchText = ""
     @Published var searchResult: Artists? = nil
@@ -26,16 +27,19 @@ class SearchViewModel:NSObject, ObservableObject {
     func search(){
         guard let token = accessToken else {
             errorMessage = "Invalid Access token"
+            showError = true
             return
         }
+        let config = URLSessionConfiguration.default
+        config.waitsForConnectivity = true
         let params = ["q": searchText, "type": "artist"]
         let url = URL(string: "https://api.spotify.com/v1/search?\(params.stringFromHttpParameters())")!
         var request = URLRequest(url: url)
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-         let publisher = URLSession.shared.dataTaskPublisher(for: request)
-            .map{$0.data}
+        let publisher = URLSession(configuration: config).dataTaskPublisher(for: request)
+            .tryMap{$0.data}
             .decode(type: Artists.self, decoder: JSONDecoder())
         self.cancellable = publisher.sink(receiveCompletion: { [weak self] completion in
             guard let strongSelf = self else{
@@ -47,6 +51,7 @@ class SearchViewModel:NSObject, ObservableObject {
             case .failure(let error):
                 DispatchQueue.main.async {
                     strongSelf.errorMessage = error.localizedDescription
+                    strongSelf.showError = true
                 }
             }
         }, receiveValue: { [weak self] posts in
