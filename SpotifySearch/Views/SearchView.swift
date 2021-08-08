@@ -51,13 +51,12 @@ struct ArtistRowItem: View {
     
     var body: some View {
         VStack{
-        HStack{
-            Text(item.name)
-                .frame(maxWidth: .infinity, alignment: .leading)
-        }.frame(height: 60, alignment: .leading)
-        .padding(.horizontal)
-        Divider()
+            HStack{
+                Text(item.name)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }.frame(height: 60, alignment: .leading)
+            .padding(.horizontal)
+            Divider()
         }
-        
     }
 }
