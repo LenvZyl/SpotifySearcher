@@ -16,7 +16,6 @@ class Loader: ObservableObject {
             self.state = .failure
             return
         }
-
         URLSession.shared.dataTask(with: parsedURL) { data, response, error in
             if let data = data, data.count > 0 {
                 self.data = data
@@ -24,7 +23,6 @@ class Loader: ObservableObject {
             } else {
                 self.state = .failure
             }
-
             DispatchQueue.main.async {
                 self.objectWillChange.send()
             }
