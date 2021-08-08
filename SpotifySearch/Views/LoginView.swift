@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct LoginView: View {
-    @StateObject var loginViewModel = LoginViewModel()    
+    @StateObject var loginViewModel = LoginViewModel()
     var body: some View {
         ZStack{
             GeometryReader{ geometry in

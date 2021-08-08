@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 import Combine
 
-class SearchViewModel:NSObject, ObservableObject {
+class SearchViewModel:NSObject, ObservableObject, URLSessionDelegate {
     
     @Published var errorMessage = ""
     @Published var showError: Bool = false
@@ -24,24 +24,37 @@ class SearchViewModel:NSObject, ObservableObject {
         self.accessToken = accessToken
     }
     
+    private lazy var session: URLSession = {
+            let configuration = URLSessionConfiguration.default
+            configuration.waitsForConnectivity = true
+            return URLSession(configuration: configuration,
+                              delegate: self, delegateQueue: nil)
+        }()
     func search(){
         guard let token = accessToken else {
             errorMessage = "Invalid Access token"
             showError = true
             return
         }
-        let config = URLSessionConfiguration.default
-        config.waitsForConnectivity = true
         let params = ["q": searchText, "type": "artist"]
         let url = URL(string: "https://api.spotify.com/v1/search?\(params.stringFromHttpParameters())")!
         var request = URLRequest(url: url)
         request.setValue("application/json", forHTTPHeaderField: "Accept")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        let publisher = URLSession(configuration: config).dataTaskPublisher(for: request)
-            .tryMap{$0.data}
+        let publisher = session.dataTaskPublisher(for: request)
+        self.cancellable = publisher
+            .map{$0.data}
             .decode(type: Artists.self, decoder: JSONDecoder())
-        self.cancellable = publisher.sink(receiveCompletion: { [weak self] completion in
+            .mapError{ error -> Error in
+                switch error{
+                case URLError.cannotFindHost:
+                    return APIError.networkError(error: error.localizedDescription)
+                default:
+                    return APIError.responseError(error: error.localizedDescription)
+                }
+            }
+            .sink(receiveCompletion: { [weak self] completion in
             guard let strongSelf = self else{
                 return
             }
@@ -63,4 +76,10 @@ class SearchViewModel:NSObject, ObservableObject {
             }
         })
     }
+}
+
+enum APIError: Error{
+    case networkError(error: String)
+    case responseError(error: String)
+    case unknownError
 }

@@ -45,6 +45,9 @@ class LoginViewModel:NSObject, ObservableObject {
         } else if let errorDescription = parameters?[SPTAppRemoteErrorDescriptionKey] {
             errorMessage = errorDescription
             showError = true
+        }else{
+            errorMessage = "Spotify Login Failed, please try again later!"
+            showError = true
         }
     }
     
