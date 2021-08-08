@@ -25,9 +25,10 @@ struct LoginView: View {
                                 .foregroundColor(.white)
                         }.frame(width: geometry.size.width)
                         Spacer()
-                    }.background(Color.black.ignoresSafeArea(.all, edges: .all))
+                    }
+                    .background(LinearGradient(gradient: Constants.backgroundGradient, startPoint: .top, endPoint: .bottom)
+                                    .ignoresSafeArea(.all, edges: .all))
                     if(loginViewModel.accessToken != nil){
-                        
                         SearchView(searchViewModel: SearchViewModel(accessToken: loginViewModel.accessToken!))
                     }
                 }

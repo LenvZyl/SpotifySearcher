@@ -14,7 +14,6 @@ struct SearchBar: View {
  
     var body: some View {
         HStack {
- 
             TextField("Search ...", text: $text)
                 .padding(7)
                 .padding(.horizontal, 10)
@@ -24,7 +23,6 @@ struct SearchBar: View {
                 .onTapGesture {
                     self.isEditing = true
                 }
- 
             if text != "" {
                 Button(action: {
                     UIApplication.shared.endEditing()
@@ -32,6 +30,7 @@ struct SearchBar: View {
  
                 }) {
                     Text("Search")
+                        .foregroundColor(Color.white)
                 }
                 .padding(.trailing, 10)
                 .transition(.move(edge: .trailing))

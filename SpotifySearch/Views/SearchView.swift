@@ -34,29 +34,14 @@ struct SearchView: View {
                 }
                 Spacer()
             }.navigationBarTitle("Spotify Search")
-        }
+            .background(LinearGradient(gradient: Constants.backgroundGradient, startPoint: .top, endPoint: .bottom)
+                            .ignoresSafeArea(.all, edges: .all))
+        }.accentColor(.white)
     }
 }
 
 struct SearchView_Previews: PreviewProvider {
     static var previews: some View {
         SearchView(searchViewModel: SearchViewModel(accessToken: ""))
-    }
-}
-
-
-
-struct ArtistRowItem: View {
-    var item: Item
-    
-    var body: some View {
-        VStack{
-            HStack{
-                Text(item.name)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-            }.frame(height: 60, alignment: .leading)
-            .padding(.horizontal)
-            Divider()
-        }
     }
 }

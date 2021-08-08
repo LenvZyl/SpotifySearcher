@@ -4,15 +4,8 @@
 //
 //  Created by Len van Zyl on 2021/08/08.
 //
-
+import SwiftUI
 import Foundation
-class ArtistViewModel: ObservableObject {
-    
-}
-
-enum LoadState {
-    case loading, success, failure
-}
 
 class Loader: ObservableObject {
     var data = Data()
@@ -20,7 +13,8 @@ class Loader: ObservableObject {
 
     init(url: String) {
         guard let parsedURL = URL(string: url) else {
-            fatalError("Invalid URL: \(url)")
+            self.state = .failure
+            return
         }
 
         URLSession.shared.dataTask(with: parsedURL) { data, response, error in
@@ -37,4 +31,8 @@ class Loader: ObservableObject {
         }.resume()
     }
 }
+enum LoadState {
+    case loading, success, failure
+}
+
 
