@@ -14,15 +14,22 @@ class TokenManager {
         guard let token = userDefaults.string(forKey: "token") else{
             return nil
         }
+        return token
+    }
+    func checkTokenValidity() -> Bool{
+        guard getToken() != nil else{
+            return false
+        }
         guard let tokenDate = userDefaults.object(forKey: "tokenDate") as? Date else{
-            return nil
+            return false
         }
         let distanceTo = tokenDate.distance(to: Date())
         if(distanceTo >= 3600){
-            removeToken()
-            return nil
+            return false
+        }else{
+            return true
         }
-        return token
+        
     }
     func storeToken(accessToken: String) {
         userDefaults.set(accessToken, forKey: "token")

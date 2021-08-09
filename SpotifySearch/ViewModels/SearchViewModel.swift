@@ -15,7 +15,9 @@ class SearchViewModel:NSObject, ObservableObject, URLSessionDelegate {
     @Published var showError: Bool = false
     @Published var searchText = ""
     @Published var searchResult: Artists? = nil
+    @Published var loading = false
     var playURI = ""
+    
     
     private var cancellable: AnyCancellable?
     
@@ -26,11 +28,18 @@ class SearchViewModel:NSObject, ObservableObject, URLSessionDelegate {
                               delegate: self, delegateQueue: nil)
         }()
     func search(){
-        guard let token = TokenManager().getToken() else {
+        let tokenManager = TokenManager()
+        if(!tokenManager.checkTokenValidity()){
             errorMessage = "Invalid Access token"
             showError = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                tokenManager.removeToken()
+            }
+        }
+        guard let token = tokenManager.getToken() else {
             return
         }
+        loading = true
         let params = ["q": searchText, "type": "artist"]
         let url = URL(string: "https://api.spotify.com/v1/search?\(params.stringFromHttpParameters())")!
         var request = URLRequest(url: url)
@@ -58,6 +67,7 @@ class SearchViewModel:NSObject, ObservableObject, URLSessionDelegate {
                 break
             case .failure(let error):
                 DispatchQueue.main.async {
+                    strongSelf.loading = false
                     strongSelf.errorMessage = error.localizedDescription
                     strongSelf.showError = true
                 }
@@ -67,6 +77,11 @@ class SearchViewModel:NSObject, ObservableObject, URLSessionDelegate {
                 return
             }
             DispatchQueue.main.async {
+                if(posts.artists.items.isEmpty){
+                    strongSelf.errorMessage = "No results found"
+                    strongSelf.showError = true
+                }
+                strongSelf.loading = false
                 strongSelf.searchResult = posts
             }
         })

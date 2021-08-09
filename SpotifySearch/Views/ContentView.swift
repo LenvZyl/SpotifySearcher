@@ -8,8 +8,19 @@
 import SwiftUI
 
 struct ContentView: View {
+    @AppStorage("token") var token: String = ""
+    
+    init() {
+        if(!TokenManager().checkTokenValidity()){
+            TokenManager().removeToken()
+        }
+    }
     var body: some View {
-        LoginView()
+        if(token == ""){
+            LoginView()
+        }else{
+            SearchView()
+        }
     }
 }
 

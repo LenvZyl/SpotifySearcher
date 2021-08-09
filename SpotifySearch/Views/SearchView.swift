@@ -12,12 +12,12 @@ import UIKit
 
 
 struct SearchView: View {
-    @StateObject var searchViewModel: SearchViewModel
+    @StateObject var searchViewModel = SearchViewModel()
     
     var body: some View {
         NavigationView {
             VStack{
-                SearchBar(text: $searchViewModel.searchText, function: searchViewModel.search)
+                SearchBar(searchViewModel: searchViewModel, function: searchViewModel.search)
                     .padding(.top)
                     .padding(.bottom)
             
@@ -47,6 +47,6 @@ struct SearchView: View {
 
 struct SearchView_Previews: PreviewProvider {
     static var previews: some View {
-        SearchView(searchViewModel: SearchViewModel())
+        SearchView()
     }
 }

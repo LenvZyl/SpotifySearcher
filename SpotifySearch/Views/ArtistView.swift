@@ -23,7 +23,7 @@ struct ArtistView: View {
                 Text(artist.name)
                     .fontWeight(.bold)
                     .font(.system(size: 20))
-
+                    .shadow(radius: 2)
                     .frame(width: UIScreen.main.bounds.width).padding()
             }
             HStack{

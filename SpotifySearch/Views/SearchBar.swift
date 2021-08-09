@@ -8,13 +8,14 @@
 import SwiftUI
  
 struct SearchBar: View {
-    @Binding var text: String
+    @StateObject var searchViewModel: SearchViewModel
     @State private var isEditing = false
     var function: () -> Void
+    
  
     var body: some View {
         HStack {
-            TextField("Search ...", text: $text)
+            TextField("Search ...", text: $searchViewModel.searchText)
                 .padding(7)
                 .padding(.horizontal, 10)
                 .background(Color(.systemGray6))
@@ -23,18 +24,25 @@ struct SearchBar: View {
                 .onTapGesture {
                     self.isEditing = true
                 }
-            if text != "" {
+            if searchViewModel.searchText != "" {
                 Button(action: {
-                    UIApplication.shared.endEditing()
-                    self.function()
- 
+                    if(!searchViewModel.loading) {
+                        UIApplication.shared.endEditing()
+                        self.function()
+                    }
                 }) {
-                    Text("Search")
+                    if(searchViewModel.loading) {
+                        ProgressView().frame(width: 50)
+                    } else {
+                        Text("Search")
                         .foregroundColor(Color.white)
+                        .frame(width: 50)
+                    }
                 }
                 .padding(.trailing, 10)
                 .transition(.move(edge: .trailing))
                 .animation(.default)
+                
             }
         }
     }

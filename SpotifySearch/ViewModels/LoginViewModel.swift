@@ -12,8 +12,8 @@ import Network
 class LoginViewModel:NSObject, ObservableObject {
     @Published var errorMessage: String = ""
     @Published var showError: Bool = false
-    @Published var accessToken: String? = nil
-    var playURI = ""
+    private var accessToken: String? = nil
+    private var playURI = ""
     
     let monitor = NWPathMonitor()
     let spotifyClientID = Constants.clientId
