@@ -28,6 +28,9 @@ class LoginViewModel:NSObject, ObservableObject {
     
     override init() {
         super.init()
+        if let token = TokenManager().getToken() {
+            self.accessToken = token
+        }
     }
             
     lazy var appRemote: SPTAppRemote = {
@@ -42,6 +45,7 @@ class LoginViewModel:NSObject, ObservableObject {
         if let accessToken = parameters?[SPTAppRemoteAccessTokenKey] {
             appRemote.connectionParameters.accessToken = accessToken
             self.accessToken = accessToken
+            TokenManager().storeToken(accessToken: accessToken)
         } else if let errorDescription = parameters?[SPTAppRemoteErrorDescriptionKey] {
             errorMessage = errorDescription
             showError = true

@@ -13,16 +13,11 @@ class SearchViewModel:NSObject, ObservableObject, URLSessionDelegate {
     
     @Published var errorMessage = ""
     @Published var showError: Bool = false
-    @Published var accessToken: String? = nil
     @Published var searchText = ""
     @Published var searchResult: Artists? = nil
     var playURI = ""
     
     private var cancellable: AnyCancellable?
-    
-    init(accessToken: String) {
-        self.accessToken = accessToken
-    }
     
     private lazy var session: URLSession = {
             let configuration = URLSessionConfiguration.default
@@ -31,7 +26,7 @@ class SearchViewModel:NSObject, ObservableObject, URLSessionDelegate {
                               delegate: self, delegateQueue: nil)
         }()
     func search(){
-        guard let token = accessToken else {
+        guard let token = TokenManager().getToken() else {
             errorMessage = "Invalid Access token"
             showError = true
             return

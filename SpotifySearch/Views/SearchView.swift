@@ -47,6 +47,6 @@ struct SearchView: View {
 
 struct SearchView_Previews: PreviewProvider {
     static var previews: some View {
-        SearchView(searchViewModel: SearchViewModel(accessToken: ""))
+        SearchView(searchViewModel: SearchViewModel())
     }
 }

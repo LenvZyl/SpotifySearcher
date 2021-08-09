@@ -25,7 +25,8 @@ struct LoginView: View {
                             .shadow(color: Color.white, radius: 3)
                     }.frame(width: geometry.size.width)
                     .padding(.vertical, 80)
-                }
+                    Text(loginViewModel.accessToken ?? "No Token")
+                 }
                 .background(LinearGradient(gradient: Constants.backgroundGradient,
                                            startPoint: .top,
                                            endPoint: .bottom)
@@ -36,7 +37,7 @@ struct LoginView: View {
                           dismissButton: .destructive(Text("Ok")))
                 })
                 if(loginViewModel.accessToken != nil){
-                    SearchView(searchViewModel: SearchViewModel(accessToken: loginViewModel.accessToken!))
+                    SearchView(searchViewModel: SearchViewModel())
                 }
             }
         }.onOpenURL { url in
