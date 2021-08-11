@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 import Combine
 
-class SearchViewModel:NSObject, ObservableObject, URLSessionDelegate {
+class SearchViewModel: ObservableObject {
     
     @Published var errorMessage = ""
     @Published var showError: Bool = false
@@ -19,14 +19,28 @@ class SearchViewModel:NSObject, ObservableObject, URLSessionDelegate {
     var playURI = ""
     
     
-    private var cancellable: AnyCancellable?
+    private var searchCancellable: AnyCancellable? = nil
+    private var searchGetCancellable: AnyCancellable? = nil
     
     private lazy var session: URLSession = {
             let configuration = URLSessionConfiguration.default
             configuration.waitsForConnectivity = true
-            return URLSession(configuration: configuration,
-                              delegate: self, delegateQueue: nil)
+            return URLSession(configuration: configuration)
         }()
+    
+    init(){
+        searchCancellable = $searchText
+            .removeDuplicates()
+            .debounce(for: 0.5, scheduler: RunLoop.main)
+            .sink(receiveValue: { str in
+                if str == "" {
+                    self.searchResult = nil
+                }else{
+                    self.search()
+                }
+                
+            })
+    }
     func search(){
         let tokenManager = TokenManager()
         if(!tokenManager.checkTokenValidity()){
@@ -47,7 +61,7 @@ class SearchViewModel:NSObject, ObservableObject, URLSessionDelegate {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         let publisher = session.dataTaskPublisher(for: request)
-        self.cancellable = publisher
+        self.searchGetCancellable = publisher
             .map{$0.data}
             .decode(type: Artists.self, decoder: JSONDecoder())
             .mapError{ error -> Error in

@@ -14,23 +14,36 @@ import UIKit
 struct SearchView: View {
     @StateObject var searchViewModel = SearchViewModel()
     
+    var drag: some Gesture {
+        DragGesture()
+          .onChanged { state in
+            UIApplication.shared.endEditing()
+          }
+          .onEnded { state in
+            print("ended")
+        }
+      }
     var body: some View {
         NavigationView {
             VStack{
-                SearchBar(searchViewModel: searchViewModel, function: searchViewModel.search)
+                SearchBar(searchViewModel: searchViewModel)
                     .padding(.top)
                     .padding(.bottom)
-            
-                if let artists = searchViewModel.searchResult?.artists {
-                    ScrollView(.vertical) {
-                        VStack(spacing: 10) {
-                            ForEach(artists.items) { item in
-                                ArtistRowItem(item: item)
+                
+                if searchViewModel.loading{
+                    ProgressView()
+                }else{
+                    if let artists = searchViewModel.searchResult?.artists {
+                        ScrollView(.vertical) {
+                            VStack(spacing: 10) {
+                                ForEach(artists.items) { item in
+                                    ArtistRowItem(item: item)
+                                }
                             }
+                            .frame(maxWidth: .infinity)
                         }
-                        .frame(maxWidth: .infinity)
+                        
                     }
-                    
                 }
                 Spacer()
             }.navigationBarTitle("Spotify Search")
@@ -50,3 +63,4 @@ struct SearchView_Previews: PreviewProvider {
         SearchView()
     }
 }
+
