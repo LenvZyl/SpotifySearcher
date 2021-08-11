@@ -14,15 +14,6 @@ import UIKit
 struct SearchView: View {
     @StateObject var searchViewModel = SearchViewModel()
     
-    var drag: some Gesture {
-        DragGesture()
-          .onChanged { state in
-            UIApplication.shared.endEditing()
-          }
-          .onEnded { state in
-            print("ended")
-        }
-      }
     var body: some View {
         NavigationView {
             VStack{
@@ -41,8 +32,10 @@ struct SearchView: View {
                                 }
                             }
                             .frame(maxWidth: .infinity)
-                        }
-                        
+                        }.simultaneousGesture(
+                            DragGesture().onChanged({_ in
+                                UIApplication.shared.endEditing()
+                            }))
                     }
                 }
                 Spacer()
