@@ -14,6 +14,7 @@ struct ArtistView: View {
     init(item: Item) {
         self.artist = item
         genres = item.genres.reduce("", { $0 == "" ? $1.firstUppercased : $0.firstUppercased  + ", " + $1.firstUppercased})
+        genres = item.genres.map(\.capitalized).joined(separator: ", ")
     }
     var body: some View {
         VStack(alignment: .leading) {
